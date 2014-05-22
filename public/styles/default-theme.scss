@@ -1,0 +1,34 @@
+@import 'sencha-touch/default/all';
+// @import 'Ext.ux.grid.View';
+
+// You may remove any of the following modules that you
+// do not use in order to create a smaller css file.
+
+
+@include sencha-panel;
+@include sencha-buttons;
+@include sencha-sheet;
+@include sencha-picker;
+@include sencha-tabs;
+@include sencha-toolbar;
+@include sencha-toolbar-forms;
+@include sencha-indexbar;
+@include sencha-list;
+@include sencha-layout;
+@include sencha-carousel;
+@include sencha-form;
+@include sencha-msgbox;
+
+// Your custom code goes here...
+
+@include pictos-iconmask('myturn-logo');
+@include pictos-iconmask('list');
+
+.ButtonWithImage {
+  width: 80%;
+  height: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  display: block;
+}
