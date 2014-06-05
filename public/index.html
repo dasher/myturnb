@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>My Turn</title>
-    <link rel="stylesheet" href="resources/css/Ext.ux.grid.View.css" type="text/css">	 	
     <style type="text/css">
          /**
          * Example of an initial loading indicator.
@@ -64,11 +63,15 @@
                 opacity: 0.8
             }
         }
-</style>
+    </style>
+
+    <link rel="stylesheet" href="resources/css/Ext.ux.grid.View.css" type="text/css">
+    <link rel="stylesheet" href="resources/css/app.css" type="text/css">
+
+    <script type="text/javascript" src="sdk/sencha-touch.js"></script>
 	<script type="text/javascript" src="cordova.js"></script>
 	<script type="text/javascript" src="library/socket.io.js"></script>
-
-    <script id="microloader" type="text/javascript" src="sdk/microloader/development.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
     <div id="appLoadingTitle"><p>The application is loading, this can take up to a minute...</p></div>
