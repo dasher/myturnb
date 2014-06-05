@@ -9,7 +9,7 @@ var express = require('express'),
     rulesEngine = require('./api/rulesEngine'),
     db = require('./api/db.js'),
     messageDispatcherInstance = require('./api/messageDispatcher'),
-    apiServer = require('./api/nodejs_server.js');
+    apiServer = require('./api/server.js');
 
 var app = module.exports = express.createServer();
 
