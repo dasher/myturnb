@@ -36,6 +36,7 @@
 
 	<gap:splash src="resources/loading/Default.png" width="320" height="480" />
 	<gap:splash src="resources/loading/Default@2x.png" width="640" height="960" />
+	<gap:splash src="resources/loading/Default~iphone5@2x.png" width="640" height="1136" />
 	<gap:splash src="resources/loading/Default~ipad.png" width="768" height="1024" />
 	<gap:splash src="resources/loading/Default@2x~ipad.png" width="1536" height="2048" />
 </widget>
