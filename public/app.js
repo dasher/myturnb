@@ -46,6 +46,12 @@ Ext.application({
 
         // Initialize the main view
         Ext.Viewport.add(Ext.create('testing.view.Main'));
+
+        setTimeout(function(){
+            if(navigator.splashscreen){
+                navigator.splashscreen.hide();
+            }
+    }, 2000);
     },
 
     onUpdated: function() {
