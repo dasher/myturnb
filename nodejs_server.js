@@ -3,19 +3,34 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , user = require('./api/models/user')
-  , rulesEngine = require('./api/rulesEngine')
-  , db = require('./api/db.js')
-  , messageDispatcherInstance = require('./api/messageDispatcher')
-  , apiServer = require('./api/nodejs_server.js');
+var express = require('express'),
+    routes = require('./routes'),
+    user = require('./api/models/user'),
+    rulesEngine = require('./api/rulesEngine'),
+    db = require('./api/db.js'),
+    messageDispatcherInstance = require('./api/messageDispatcher'),
+    apiServer = require('./api/nodejs_server.js');
+
 var app = module.exports = express.createServer();
 
 var rulesEngineMap = {};
 // Configuration
 
 app.configure(function() {
+    // Enable CORS
+    app.use(function(req, res, next){
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+        if(req.method == 'OPTIONS'){
+            res.send(200);
+        }
+        else{
+            next();
+        }
+    });
+
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());

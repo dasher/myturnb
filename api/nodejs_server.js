@@ -36,6 +36,7 @@ app.get('/data/groups.json', function(req, res) {
     		filteredData.push(group);
     	}
     }
+    
     res.send(filteredData);
 });
 
