@@ -35,12 +35,9 @@
         {
             "path": "sdk/sencha-touch.js"
         },
-//        {
-//	    	"path": "cordova-2.1.0.js"
-//        },
         {
             "path": "app.js",
-            "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
+            "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when built */
             "update": "full"
         },
     ],

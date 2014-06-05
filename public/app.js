@@ -51,7 +51,7 @@ Ext.application({
             if(navigator.splashscreen){
                 navigator.splashscreen.hide();
             }
-    }, 2000);
+        }, 2000);
     },
 
     onUpdated: function() {
