@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.isi.myturn-dev" version="1.0.0" versionCode="100">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="mobi.myturn.myturner" version="1.0.0" versionCode="100">
 	<name>MyTurn</name>
 
 	<description></description>
 
-	<author href="http://www.aplimovil.net" email="contacto@aplimovil.net">ApliMovil</author>
+	<author href="http://www.socialinformatics.org" email="contact@socialinformatics.org">Institute for Social Informatics</author>
 
 	<gap:platform name="ios" />
 	<gap:platform name="android" minVersion="2.3" />
 	
 	<gap:plugin name="org.apache.cordova.splashscreen" />
 	
-	<preference name="phonegap-version" value="3.1.0" />
+	<preference name="phonegap-version" value="3.3.0" />
 	<preference name="android-minSdkVersion" value="9" />
 	<preference name="orientation" value="portrait" />
 	<preference name="target-device" value="universal" />
@@ -32,6 +32,7 @@
 	<icon src="resources/icons/icon.png" gap:role="default" width="57" height="57" />
 	<icon src="resources/icons/Icon~ipad.png" gap:platform="ios" width="72" height="72" />
 	<icon src="resources/icons/Icon@2x.png" gap:platform="ios" width="114" height="114" />
+	<icon src="resources/icons/Icon~ipad@2x.png" gap:platform="ios" width="144" height="144" />
 	<icon src="resources/icons/Icon~ipad@2x.png" gap:platform="android" gap:density="mdpi" />
 
 	<gap:splash src="resources/loading/Default.png" width="320" height="480" />
