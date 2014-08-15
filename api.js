@@ -14,8 +14,60 @@ var express = require('express'),
 var app = module.exports = express.createServer();
 
 var rulesEngineMap = {};
-// Configuration
 
+var getLocalNetworkIP = (function () {
+    var ignoreRE = /^(127\.0\.0\.1|::1|fe80(:1)?::1(%.*)?)$/i;
+
+    var exec = require('child_process').exec;
+    var cached;    
+    var command;
+    var filterRE;
+
+    switch (process.platform) {
+        case 'darwin':
+             command = 'ifconfig';
+             filterRE = /\binet\s+([^\s]+)/g;
+             // filterRE = /\binet6\s+([^\s]+)/g; // IPv6
+             break;
+        default:
+             command = 'ifconfig';
+             filterRE = /\binet\b[^:]+:\s*([^\s]+)/g;
+             // filterRE = /\binet6[^:]+:\s*([^\s]+)/g; // IPv6
+             break;
+    }
+
+    return function (callback, bypassCache) {
+        if (cached && !bypassCache) {
+            callback(null, cached);
+            return;
+        }
+
+        exec(command, function (error, stdout, sterr) {
+            var ips = [];
+
+            var matches = stdout.match(filterRE);
+
+            for (var i = 0; i < matches.length; i++) {
+                ips.push(matches[i].replace(filterRE, '$1'));
+            }
+
+            for (i = 0, l = ips.length; i < l; i++) {
+                if (!ignoreRE.test(ips[i])) {
+                    //if (!error) {
+                        cached = ips[i];
+                    //}
+                    callback(error, ips[i]);
+                    return;
+                }
+            }
+
+            // nothing found
+            callback(error, null);
+        });
+    };
+})();
+
+// Configuration
 app.configure(function() {
     // Enable CORS
     app.use(function(req, res, next){
@@ -45,7 +97,7 @@ app.configure('development', function(){
 });
 
 app.get('/data/readme.json', function(req, res) {
-    res.sendfile('Readme.txt');
+    res.sendfile('/Readme.txt', {root: __dirname});
 });
 
 app.configure('production', function(){
@@ -56,8 +108,16 @@ app.configure('production', function(){
 
 // app.get('/', routes.index);
 
-app.listen(process.env.port || 3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+getLocalNetworkIP(function(error, address){
+    if(!error && address){
+        app.listen(3000);
+        console.log("MyTurn API started on address " + address + " and port " + app.address().port);
+    }
+    else{
+        console.error("Local network address couldn't be obtained. API could not be started.");
+        process.exit();
+    }
+});
 
 var io = require('socket.io').listen(app);
 io.configure(function() {
