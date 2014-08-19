@@ -9,7 +9,7 @@ Ext.define('testing.controller.GroupsRefresher', {
     	this.setIntervalId(setInterval(function() 
     		{
     			Ext.getStore('groups').load();
-    		}, 2000
+    		}, 5000
     	));
     },
     
