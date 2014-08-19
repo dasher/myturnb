@@ -1,5 +1,6 @@
 Ext.define("testing.view.Main", {
     extend: 'Ext.tab.Panel',
+    id: 'mainPanel',
     xtype: 'mainView',
     requires: [
         'Ext.field.Select',

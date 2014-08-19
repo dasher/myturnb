@@ -44,14 +44,14 @@ Ext.define('testing.controller.Login', {
 
                 //console.log("success -- response: "+response.responseText);
                 var msgbox = Ext.create('Ext.Panel', {
-                    padding: '5 5 5 5',
+                    styleHtmlContent: true,
                     html: responseText,
                     layout: 'fit',
                     modal: true,
                     hideOnMaskTap: true,
                     centered: true,
                     height: '70%',
-                    width: '70%',
+                    width: '90%',
                     scrollable: {
                         direcion: 'vertical'
                     }
@@ -106,6 +106,7 @@ Ext.define('testing.controller.Login', {
             this.getLoginTextField().setValue(name);
         }
         this.maskOff();
+        Ext.getCmp('mainPanel').getTabBar().hide();
     },
 
     doLogin: function () {
@@ -127,6 +128,7 @@ Ext.define('testing.controller.Login', {
         defaultUser.set('name', this.getLoginTextField().getValue());
         users.sync();
         this.maskOff();
+        Ext.getCmp('mainPanel').getTabBar().show();
     },
 
     init: function () {
