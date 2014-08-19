@@ -110,7 +110,7 @@ Ext.define('testing.controller.Discussion', {
     	} else {
     		this.crossPlatformPlay(this.getBeepSound());
     	}
-    	if (EnvUtils.isNative() && Ext.os.is('Android'))
+    	if (EnvUtils.isNative())
     	{
        		Ext.device.Notification.vibrate();
     	}
