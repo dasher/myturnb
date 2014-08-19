@@ -1,84 +1,34 @@
 <!DOCTYPE HTML>
-<html manifest="" lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <title>My Turn</title>
-    <style type="text/css">
-         /**
-         * Example of an initial loading indicator.
-         * It is recommended to keep this as minimal as possible to provide instant feedback
-         * while other resources are still being loaded for the first time
-         */
-        .centered-cell {
-            text-align: center;
-        }
-        .touchgridpanel .x-list-item:nth-child(odd) {
-            background-color: #fff;
-        }
-        html, body {
-            height: 100%;
-            background-color: #1985D0
-        }
+  <html lang="en-US">
+  <head>
+      <meta charset="UTF-8">
+      <style type="text/css">
+      /* Splash screens for Web View */
+      body {
+          background-image: url('resources/loading/Default~iphone5@2x.png');
+          background-size: 100%;
+          background-position: -1px -5px;
+          background-repeat: no-repeat;
+      }
 
-        #appLoadingTitle {
-            position: absolute;
-            top: 50%;
-            margin-top: -45px;
-            text-align: center;
-            width: 100%;
-            height: 30px;
-        }
-        
-        #appLoadingIndicator {
-            position: absolute;
-            top: 50%;
-            margin-top: -15px;
-            text-align: center;
-            width: 100%;
-            height: 30px;
-            -webkit-animation-name: appLoadingIndicator;
-            -webkit-animation-duration: 0.5s;
-            -webkit-animation-iteration-count: infinite;
-            -webkit-animation-direction: linear;
-        }
-
-        #appLoadingIndicator > * {
-            background-color: #FFFFFF;
-            display: inline-block;
-            height: 30px;
-            -webkit-border-radius: 15px;
-            margin: 0 5px;
-            width: 30px;
-            opacity: 0.8;
-        }
-
-        @-webkit-keyframes appLoadingIndicator{
-            0% {
-                opacity: 0.8
-            }
-            50% {
-                opacity: 0
-            }
-            100% {
-                opacity: 0.8
-            }
-        }
-    </style>
-
-    <link rel="stylesheet" href="resources/css/Ext.ux.grid.View.css" type="text/css">
-    <link rel="stylesheet" href="resources/css/app.css" type="text/css">
-
-    <script type="text/javascript" src="sdk/sencha-touch.js"></script>
-	<script type="text/javascript" src="cordova.js"></script>
-	<script type="text/javascript" src="library/socket.io.js"></script>
-    <script type="text/javascript" src="app.js"></script>
-</head>
-<body>
-    <div id="appLoadingTitle"><p>The application is loading, this can take up to a minute...</p></div>
-    <div id="appLoadingIndicator">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-</body>
-</html>
+      @media (max-height:480px){
+          body {
+              background-image: url('resources/loading/Default@2x.png') !important;
+              background-size: 320px 480px !important;
+              background-repeat: no-repeat;
+          }
+      }
+      </style>
+      <script language="javascript">
+      /* This page allows the PhoneGap framework to fully load before the app
+      starts running, thus fixing the following issue reported on Android devices:
+      http://community.phonegap.com/nitobi/topics/app_dies_on_startup_connection_to_the_server_was_unsuccessful
+      */
+     
+      window.location.href = 'app.html';
+      </script>
+      <title>App Redirection</title>
+  </head>
+  <body>
+  </body>
+  </html>
