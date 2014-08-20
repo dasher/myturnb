@@ -110,10 +110,10 @@ Ext.define('testing.controller.Discussion', {
     	} else {
     		this.crossPlatformPlay(this.getBeepSound());
     	}
-    	if (EnvUtils.isNative())
-    	{
-       		Ext.device.Notification.vibrate();
-    	}
+
+        if(navigator.notification){
+    	   navigator.notification.vibrate(1000);
+        }
     },
     
     doTick: function () {
