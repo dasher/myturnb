@@ -16,12 +16,12 @@ exports.save = function(item) {
 
 exports.remove = function(id) {
     delete items[id];
-}
+};
 
 exports.savePersistent = function(collectionName, object, callback) {
     var collectionObject = persistentDb.collection(collectionName);
     collectionObject.save(object, callback);
-}
+};
 
 exports.find = function(collectionName, queryObject, callback) {
     var collectionObject = persistentDb.collection(collectionName);
@@ -29,4 +29,4 @@ exports.find = function(collectionName, queryObject, callback) {
         queryObject = {};
     }
     collectionObject.find(queryObject).forEach(callback);
-}
+};

@@ -1,6 +1,8 @@
 Ext.define('testing.store.Groups', {
     extend: 'Ext.data.Store',
     requires: ['testing.proxy.CrossAjax'],
+    currentGroupName: '',
+
     config: {
         model: 'testing.model.Group',
         storeId: 'groups',
@@ -15,6 +17,35 @@ Ext.define('testing.store.Groups', {
             reader: 'json'
         },
         autoLoad: true,
-        autoSync: false
+        autoSync: false,
+        listeners: {
+            load: function(){
+                this.autoSelectCurrentGroup();
+            },
+            beforesync: function(){
+                UI.showMask('Saving...');
+            },
+            write: function(){
+                UI.hideMask();
+                this.autoSelectCurrentGroup();
+                this.load(); // Fixes "undefined" bug when creating 2 or more groups before the groups are auto-refreshed by the GroupsRefresher controller
+            }
+        }
+    },
+
+    setCurrentGroupName: function(name){
+        this.currentGroupName = name;
+    },
+
+    autoSelectCurrentGroup: function(){
+        var index = this.findExact('name', this.currentGroupName);
+
+        if(index != -1){
+            var group = this.getAt(index);
+            if(group){
+                var selectField = Ext.getCmp('groupSelect');
+                selectField.setValue(group.getData('name'));
+            }
+        }
     }
 });

@@ -112,23 +112,31 @@ Ext.define('testing.controller.Login', {
     doLogin: function () {
         var mainView = this.getMainView();
         var loginForm = this.getLoginForm();
-        this.getDiscussionView().setDisabled(false);
-        mainView.setActiveItem(this.getDiscussionView());
-        this.getLogoutButton().show();
-        this.getLoginButton().hide();
-        this.getLoginTextField().setDisabled(true);
-        this.getCreateGroupButton().setDisabled(true);
-        this.getGroupSelect().setDisabled(true);
-        // save user
-        var users = Ext.getStore('defaultUsers');
-        if (users.getCount() <= 0) {
-            users.add(Ext.create('testing.model.DefaultUser'));
+        var userName = this.getLoginTextField().getValue();
+
+        if(userName != ''){
+            this.getDiscussionView().setDisabled(false);
+            mainView.setActiveItem(this.getDiscussionView());
+            this.getLogoutButton().show();
+            this.getLoginButton().hide();
+            this.getLoginTextField().setDisabled(true);
+            this.getCreateGroupButton().setDisabled(true);
+            this.getGroupSelect().setDisabled(true);
+            // save user
+            var users = Ext.getStore('defaultUsers');
+            if (users.getCount() <= 0) {
+                users.add(Ext.create('testing.model.DefaultUser'));
+            }
+            var defaultUser = users.getAt(0);
+            defaultUser.set('name', userName);
+            users.sync();
+            this.maskOff();
+            Ext.getCmp('mainPanel').getTabBar().show();
         }
-        var defaultUser = users.getAt(0);
-        defaultUser.set('name', this.getLoginTextField().getValue());
-        users.sync();
-        this.maskOff();
-        Ext.getCmp('mainPanel').getTabBar().show();
+        else{
+            this.maskOff();
+            UI.alert('Please indicate your name.');
+        }
     },
 
     init: function () {

@@ -42,7 +42,7 @@ Ext.define('testing.controller.CreateGroup', {
 
     doSubmitNewGroup: function() {
         var values = this.getCreateGroupForm().getValues();
-        var name = values['name'];
+        var name = values.name;
         var groups = Ext.getStore('groups');
         // validate
         if(groups.findExact('name', name) != -1) {
@@ -58,7 +58,9 @@ Ext.define('testing.controller.CreateGroup', {
         // convert seconds
         data.turnLength = data.turnLength * 1000;
         groups.add(group);
+        groups.setCurrentGroupName(name);
         groups.sync();
+
         this.getCreateGroupForm().hide();
     }
 });

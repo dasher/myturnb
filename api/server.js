@@ -5,7 +5,8 @@ var express = require('express'),
 	vote = require('./models/vote.js'),
 	messageDispatcherInstance = require('./messageDispatcher'),
 	groupIgnoreMap = {},
-    db = require('./db.js');
+    db = require('./db.js'),
+    uuid = require('node-uuid');
 
 app.use(express.bodyParser());
 
@@ -51,8 +52,9 @@ app.post('/data/groups.json', function(req, res) {
         result = { data: [] };
     }
     var newGroup = new room(newGroupData);
+    newGroup.id = uuid.v4();
     result.data.push(newGroup);
-    console.log('====== New group: name: ' + newGroup.name + ' discussion length: ' + newGroup.discussionLength);
+    console.log('Created new group (ID: ' + newGroup.id + ' / Name: ' + newGroup.name + ' / Discussion length: ' + newGroup.discussionLength + ')');
     db.save({ id: 'groups', data: result.data });
     res.send(result.data, 200);
 });
