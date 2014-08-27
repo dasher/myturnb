@@ -12,8 +12,9 @@ Ext.define('testing.controller.Login', {
     config: {
         control: {
             readmeButton: { tap: "doReadme" },
-            loginButton: { tap: "maskOn"},
-            logoutButton: { tap: "maskOn"}
+            loginButton: { tap: "maskOn" },
+            logoutButton: { tap: "doLogout" },
+            repeatButton: { tap: "repeatDiscussion" },
         },
         refs: {
             loginForm: "loginView",
@@ -22,6 +23,7 @@ Ext.define('testing.controller.Login', {
             createGroupButton: "button[action=createGroupEvent]",
             loginButton: "button[action=loginEvent]",
             logoutButton: "button[action=logoutEvent]",
+            repeatButton: "button[action=repeatEvent]",
             loginTextField: "#loginTextField",
             groupSelect: "#groupSelect",
             discussionView: "discussionView",
@@ -107,6 +109,8 @@ Ext.define('testing.controller.Login', {
         }
         this.maskOff();
         Ext.getCmp('mainPanel').getTabBar().hide();
+
+        //this.getRepeatButton().hide();
     },
 
     doLogin: function () {
@@ -139,10 +143,26 @@ Ext.define('testing.controller.Login', {
         }
     },
 
+    /*
+    repeatDiscussion: function(){
+        var mainView = this.getMainView();
+        var discussionView = this.getDiscussionView();
+        var userReportView = this.getUserReportView();
+
+        discussionView.setDisabled(false);
+        userReportView.setDisabled(true);
+
+        this.getApplication().fireEvent('clientMessage', { type: 'repeatDiscussion' });
+        this.getRepeatButton().hide();
+
+        mainView.setActiveItem(userReportView);
+    },
+    */
+
     init: function () {
         this.getApplication().on({
             userLoggedIn: this.doLogin,
-            userLoggedOut: this.doLogout,
+            //userLoggedOut: this.doLogout,
             scope: this
         });
     },

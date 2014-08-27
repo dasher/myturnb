@@ -71,6 +71,18 @@ Ext.define("testing.view.Login", {
                                 action: 'logoutEvent',
                                 text: 'Logout'
                             },
+                            /*
+                            {
+                                id: 'loginRepeatButton',
+                                xtype: 'button',
+                                action: 'repeatEvent',
+                                text: 'Repeat',
+                                style: {
+                                    margin: "0px 5px"
+                                },
+                                hidden: true
+                            },
+                            */
                             {
                                 xtype: 'button',
                                 text: 'Help',

@@ -43,8 +43,9 @@ Ext.define('testing.store.Groups', {
         if(index != -1){
             var group = this.getAt(index);
             if(group){
+                var groupData = group.getData();
                 var selectField = Ext.getCmp('groupSelect');
-                selectField.setValue(group.getData('name'));
+                selectField.setValue(groupData.name);
             }
         }
     }

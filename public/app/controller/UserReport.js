@@ -7,6 +7,7 @@ Ext.define('testing.controller.UserReport', {
             userReportView: "userReportView",
             userReportData: "#userReportData",
             mainView: "mainView",
+            loginView: "loginView",
             discussionView: "discussionView"
         }
     },
@@ -16,24 +17,26 @@ Ext.define('testing.controller.UserReport', {
     doUsersSaved: function(dataContainer) {
         var userReportData = this.getUserReportData();
         var store = userReportData.getStore();
+
         store.remove(store.getRange());
+
         var length = dataContainer && dataContainer.data ? dataContainer.data.length : 0;
+
         for(var i = 0; i < length; i++) {
             var user = dataContainer.data[i];
             store.add({ name: user.name, elapsedTime: user.elapsedTime });
         }
+
+        var mainView = this.getMainView();
+        var discussionView = this.getDiscussionView();
         var userReportView = this.getUserReportView();
+
+        discussionView.setDisabled(true);
         userReportView.setDisabled(false);
-        this.getMainView().setActiveItem(userReportView);
-        this.messageBox = Ext.Msg.confirm('', "Discussion time is up. Do you wish to repeat it?", function(answer) {
-            var application = this.getApplication();
-            if(answer == 'yes') {
-                application.fireEvent('clientMessage', { type: 'repeatDiscussion' });
-            } else {
-                application.fireEvent('clientMessage', { type: 'discussionOver' });
-            }
-            this.messageBox = null;
-        }, this);
+
+        mainView.setActiveItem(userReportView);
+        
+        //Ext.getCmp('loginRepeatButton').show();
     },
 
     clearMessageBox: function() {
@@ -54,7 +57,7 @@ Ext.define('testing.controller.UserReport', {
     init: function() {
         this.getApplication().on({
             usersSaved: this.doUsersSaved,
-            repeatingDiscussion: this.doRepeatingDiscussion,
+            repeatDiscussion: this.doRepeatingDiscussion,
             discussionOver: this.clearMessageBox,
             scope: this
         });
