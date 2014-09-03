@@ -108,9 +108,15 @@ app.configure('production', function(){
 
 // app.get('/', routes.index);
 
+var port = 80;
+
+if(process.argv.indexOf('--local') != -1){
+    port = 3000;
+}
+
 getLocalNetworkIP(function(error, address){
     if(!error && address){
-        app.listen(3000);
+        app.listen(port);
         console.log("MyTurn API started on address " + address + " and port " + app.address().port);
     }
     else{
