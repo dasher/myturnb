@@ -114,16 +114,17 @@ if(process.argv.indexOf('--local') != -1){
     port = 3000;
 }
 
-getLocalNetworkIP(function(error, address){
+//getLocalNetworkIP(function(error, address){
     if(!error && address){
         app.listen(port);
-        console.log("MyTurn API started on address " + address + " and port " + app.address().port);
+        //console.log("MyTurn API started on address " + address + " and port " + app.address().port);
+        console.log("MyTurn API started on port " + app.address().port);
     }
     else{
         console.error("Local network address couldn't be obtained. API could not be started.");
         process.exit();
     }
-});
+//});
 
 var io = require('socket.io').listen(app);
 io.configure(function() {
