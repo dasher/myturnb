@@ -3,15 +3,21 @@
  * Module dependencies.
  */
 
-var express = require('express'),
+var http = require('http'),
+	express = require('express'),
     routes = require('./routes'),
+    bodyParser = require('body-parser'),
+    multer = require("multer"),
+    errorHandler = require('errorhandler'),
+    staticHelper = require("./api/staticHelper.js"),
+    methodOverride = require('method-override'),
     user = require('./api/models/user'),
     rulesEngine = require('./api/rulesEngine'),
     db = require('./api/db.js'),
     messageDispatcherInstance = require('./api/messageDispatcher'),
     apiServer = require('./api/server.js');
 
-var app = module.exports = express.createServer();
+var app = module.exports = express();
 
 var rulesEngineMap = {};
 
@@ -19,7 +25,7 @@ var getLocalNetworkIP = (function () {
     var ignoreRE = /^(127\.0\.0\.1|::1|fe80(:1)?::1(%.*)?)$/i;
 
     var exec = require('child_process').exec;
-    var cached;    
+    var cached;
     var command;
     var filterRE;
 
@@ -68,51 +74,59 @@ var getLocalNetworkIP = (function () {
 })();
 
 // Configuration
-app.configure(function() {
-    // Enable CORS
-    app.use(function(req, res, next){
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-        if(req.method == 'OPTIONS'){
-            res.send(200);
-        }
-        else{
-            next();
-        }
-    });
+app.use(function(req, res, next){
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-    app.set('views', __dirname + '/views');
-    app.set('view engine', 'jade');
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use('/api', apiServer);
-    app.use(express.static(__dirname + '/public'));
+    if(req.method == 'OPTIONS'){
+        res.send(200);
+    }
+    else{
+        next();
+    }
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer());
+
+app.use(methodOverride());
+//app.use(app.router);
+app.use('/api', apiServer);
+app.get('/cordova.js', staticHelper.cordova);
+
+app.use(express.static(__dirname + '/public'));
+
+if (app.get("env") == "development") {
+	app.use(function(){
+	  app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+	});
+} else {
+	app.use(function(){
+	  app.use(errorHandler());
+	});
+}
 
 app.get('/data/readme.json', function(req, res) {
     res.sendfile('/Readme.txt', {root: __dirname});
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
 });
 
 // Routes
 
 // app.get('/', routes.index);
 
-var port = 80;
+var port = 8001;
 
 if(process.argv.indexOf('--local') != -1){
     port = 3000;
 }
+
+app.set('port', port);
 
 /*getLocalNetworkIP(function(error, address){
     if(!error && address){
@@ -125,11 +139,39 @@ if(process.argv.indexOf('--local') != -1){
     }
 });*/
 
-app.listen(port);
-console.log("MyTurn API started on port " + app.address().port);
+var server = http.createServer(app);
+
+server.listen(app.get('port'), function(){
+	console.log("MyTurn API started on port " + app.get("port"));
+});
+
+var io = require('socket.io')(server, {
+	'resource': '/api/socket.io'
+});
 
 
-var io = require('socket.io').listen(app);
+messageDispatcherInstance.setIo(io);
+messageDispatcherInstance.on('persistRoomData', function(room) {
+    persistRoomData(room);
+});
+messageDispatcherInstance.on('discussionOverInServer', function(room) {
+    cleanRoomData(room);
+});
+
+io.on('connection', function(socket) {
+    socket.on('login', function(data) {
+        login(socket, data);
+    });
+    socket.on('disconnect', function(reason) {
+        db.remove(socket.id);
+    });
+    socket.on('clientMessage', function(messageData) {
+        messageDispatcherInstance.sendMessageFromClient(socket.id, messageData);
+    });
+});
+
+
+/*
 io.configure(function() {
     // Configure socket.io
     io.set('resource', '/api/socket.io');
@@ -155,6 +197,7 @@ io.configure(function() {
         });
     });
 });
+*/
 
 function login(socket, data) {
     var name = data.name;

@@ -1,5 +1,7 @@
 var express = require('express'),
-    app = module.exports = express.createServer(),
+    app = module.exports = express(),
+    bodyParser = require("body-parser"),
+    multer = require("multer"),
     room = require('./models/room'),
     invitation = require('./models/invitation.js'),
 	vote = require('./models/vote.js'),
@@ -8,21 +10,23 @@ var express = require('express'),
     db = require('./db.js'),
     uuid = require('node-uuid');
 
-app.use(express.bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer());
 
-app.configure(function() {
+app.use(function() {
 	messageDispatcherInstance.on('persistRoomData', function(roomName) {
 		groupIgnoreMap[roomName] = true;
 	});
 	messageDispatcherInstance.on('repeatingDiscussionInServer', function(roomName) {
 		if (groupIgnoreMap[roomName]) {
 			delete groupIgnoreMap[roomName];
-		}		
+		}
 	});
 	messageDispatcherInstance.on('discussionOverInServer', function(roomName) {
 		if (groupIgnoreMap[roomName]) {
 			delete groupIgnoreMap[roomName];
-		}		
+		}
 	});
 });
 
@@ -37,7 +41,7 @@ app.get('/data/groups.json', function(req, res) {
     		filteredData.push(group);
     	}
     }
-    
+
     res.send(filteredData);
 });
 
