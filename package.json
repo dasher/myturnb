@@ -26,7 +26,7 @@
     "mongojs": "^0.18.2",
     "multer": "^0.1.8",
     "node-uuid": "^1.4.3",
-    "socket.io": "^1.3.5"
+    "socket.io": "git://github.com/Automattic/socket.io.git"
   },
   "noAnalyze": true,
   "license": "Apache",

@@ -3,6 +3,7 @@ Ext.define('testing.util.UrlUtils', {
 	getBaseUrl: function() {
 		var isNative = EnvUtils.isNative();
 		var url = isNative || (location.href.indexOf('http://localhost/') == -1) ? 'http://myturn.mobi/' : 'http://localhost:3000/';
+		url = location.protocol + "//" + location.host + "/";
 		return url;
 	}
 });

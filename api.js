@@ -145,9 +145,7 @@ server.listen(app.get('port'), function(){
 	console.log("MyTurn API started on port " + app.get("port"));
 });
 
-var io = require('socket.io')(server, {
-	'resource': '/api/socket.io'
-});
+var io = require('socket.io')(server);
 
 
 messageDispatcherInstance.setIo(io);
@@ -165,11 +163,21 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function(reason) {
         db.remove(socket.id);
     });
+    /*
     socket.on('clientMessage', function(messageData) {
         messageDispatcherInstance.sendMessageFromClient(socket.id, messageData);
     });
+	*/
 });
 
+io.use(function(socket, next) {
+  var handshakeData = socket.request;
+  // make sure the handshake data looks good as before
+  // if error do this:
+    // next(new Error('not authorized');
+  // else just call next
+  next();
+});
 
 /*
 io.configure(function() {
@@ -202,36 +210,46 @@ io.configure(function() {
 function login(socket, data) {
     var name = data.name;
     var room = data.room;
+    console.log("io:login", name, room, arguments);
+    console.log("Client In Rooms: ", socket.rooms);
     // check if user already exists
-    var clientsInRoom = io.sockets.clients(room);
-    var length = clientsInRoom ? clientsInRoom.length : 0;
-    for (var i=0; i<length; i++)
-    {
-        var client = clientsInRoom[i];
-        var userObject = db.load(client.id);
-        if (userObject && userObject.name == name && userObject.room == room)
-        {
-            socket.emit('userRejected', {reason: 'alreadyExists'});
-            return;
-        }
-    }
-    var roomObject = getRoomObject(room);
-    if (!roomObject) {
-        socket.emit('userRejected', {reason: 'groupNotDefined'});
-        return;
-    }
-    // save new client data
-    db.save(new user(data, socket.id, room));
-    roomObject.userIds.push(socket.id);
-    saveRoomObject(roomObject);
-    // create a rules engine if it doesn't already exist
-    if (!rulesEngineMap[room]) {
-        var newRulesEngine = new rulesEngine(roomObject, messageDispatcherInstance);
-        newRulesEngine.listen();
-        rulesEngineMap[room] = newRulesEngine;
-    }
-    socket.join(room);
-    socket.emit('userAccepted');
+    io.of("/" + room).clients(
+    	function(error, clients) {
+    		if (error) {
+    			throw error;
+    		} else {
+    			console.log(clients);
+
+			    var length = clients.length || 0;
+			    for (var i=0; i<length; i++) {
+			        var client = clients[i];
+			        var userObject = db.load(client.id);
+			        if (userObject && userObject.name == name && userObject.room == room) {
+			            socket.emit('userRejected', {reason: 'alreadyExists'});
+			            return;
+			        }
+			    }
+			    var roomObject = getRoomObject(room);
+			    if (!roomObject) {
+			        socket.emit('userRejected', {reason: 'groupNotDefined'});
+			        return;
+			    }
+			    // save new client data
+			    db.save(new user(data, socket.id, room));
+			    roomObject.userIds.push(socket.id);
+			    saveRoomObject(roomObject);
+			    // create a rules engine if it doesn't already exist
+			    if (!rulesEngineMap[room]) {
+			        var newRulesEngine = new rulesEngine(roomObject, messageDispatcherInstance);
+			        newRulesEngine.listen();
+			        rulesEngineMap[room] = newRulesEngine;
+			    }
+			    socket.join(room);
+			    socket.emit('userAccepted');
+
+    		}
+    	}
+    );
 }
 
 function getRoomObject(room) {

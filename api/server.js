@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer());
 
+/*
 app.use(function() {
 	messageDispatcherInstance.on('persistRoomData', function(roomName) {
 		groupIgnoreMap[roomName] = true;
@@ -29,6 +30,7 @@ app.use(function() {
 		}
 	});
 });
+*/
 
 app.get('/data/groups.json', function(req, res) {
     var result = db.load('groups');
@@ -60,5 +62,5 @@ app.post('/data/groups.json', function(req, res) {
     result.data.push(newGroup);
     console.log('Created new group (ID: ' + newGroup.id + ' / Name: ' + newGroup.name + ' / Discussion length: ' + newGroup.discussionLength + ')');
     db.save({ id: 'groups', data: result.data });
-    res.send(result.data, 200);
+    res.status(200).send(result.data);
 });
